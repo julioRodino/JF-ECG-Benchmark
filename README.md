@@ -1,10 +1,10 @@
-# JMX Benchmark Analysis for heartbeat detectors
+# JA Benchmark Analysis for heartbeat detectors
 
 A benchmarking analysis method that generates an overall benchmark for
-ECG detector algorithms, based on measurements of temporal jitter (J),
-missed beats (M) and extra detections (X), as these are the three ways
-errors show up independent of the source of the error. The Glasgow
-University GUDB ECG recordings database ([Howell and Porr,
+ECG detector algorithms, based on measurements of temporal jitter (J)
+and (A) accuracy
+
+The Glasgow University GUDB ECG recordings database ([Howell and Porr,
 2018](http://dx.doi.org/10.5525/gla.researchdata.716)) is used for
 testing as it has annotated R-peaks for reference. The detector
 algorithms are tested using recordings for all subjects, all
@@ -12,12 +12,9 @@ exercises, and Einthoven II and chest strap leads (Einthoven I and
 Einthoven III can additionally be used if desired).
 
 The benchmark gives a score between 0-100 where 100 is defined as the
-ideal detector. The ideal detector has no extra beats, no missed
-beats, and a mean absolute deviation (MAD) of zero for temporal jitter
-when using our interval analysis method. The benchmark is independent
-of application-specific performance to truly represent an overall
-score that can be compared across applications encompassing all the
-ways errors show up in ECG heartbeat detection.
+ideal detector. The ideal detector has
+a median absolute deviation (MAD) of zero for temporal jitter
+and an accuracy of 100%.
 
 ## Prerequisites
 
@@ -47,9 +44,9 @@ pip3 install ecg_gudb_database
 
 ## Usage
 
-### jmx_analysis.py
+### ja_analysis.py
 
-JMX analysis of interval variation, missed beat and extra detection positions:
+JA analysis of interval variation, missed beat and extra detection positions:
 
 ```
 evaluate(det_posn, anno_R, fs, nSamples, trim=True)
@@ -66,28 +63,28 @@ Arguments:
 
 Returns:
 
-    - jmx[key_jitter]   : jitter in s
-    - jmx[key_tp]       : true positive beats
-    - jmx[key_tn]       : true negative beats
-    - jmx[key_fp]       : false positive beats
-    - jmx[key_fn]       : false negative beats
-    - jmx[key_accuracy] : accuracy
-    - jmx[key_jmx]      : JMX Score
+    - ja[key_jitter]   : jitter in s
+    - ja[key_tp]       : true positive beats
+    - ja[key_tn]       : true negative beats
+    - ja[key_fp]       : false positive beats
+    - ja[key_fn]       : false negative beats
+    - ja[key_accuracy] : accuracy
+    - ja[key_ja]      : JA Score
 
 
-### jmx_evaluate_all_detectors.py
+### ja_evaluate_all_detectors.py
 
 The code evaluates all ECG detectors with all subjects, all leads, and all
 experiments. It outputs separate json files for every detector and stores
 them in the `results` directory.
 
-### jmx_stats_plots.py
+### ja_stats_plots.py
 
-The overall JMX Benchmark values for Einthoven
+The overall JA Benchmark values for Einthoven
 II and chest strap results are shown together on a bar graph for
 comparison for sitting and jogging.
 
-![alt tag](jmx.png)
+![alt tag](ja.png)
 
 # Traditional sensitivity analysis
 
