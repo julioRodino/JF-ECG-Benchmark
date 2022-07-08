@@ -18,16 +18,16 @@ resultsdir = "results"
 
 alpha = 0.05
 
-minjmx = 90 # %
+minja = 90 # %
 
-def get_jmx(detector_name, leads, experiment):
-    f = open(resultsdir+"/jmx_"+detector_name+".json","r")
+def get_ja(detector_name, leads, experiment):
+    f = open(resultsdir+"/ja_"+detector_name+".json","r")
     js = f.read()
     data = json.loads(js)
     s = []
     for i in data[leads][experiment]:
-        if i["jmx"]:
-            s.append(i["jmx"]*100)
+        if i["ja"]:
+            s.append(i["ja"]*100)
     return np.array(s)
 
 
@@ -36,9 +36,9 @@ def get_result(det, leads, experiment):
     m = []
     s = []
     for det in det_names:
-        print(det,experiment,get_jmx(det, leads, experiment))
-        m.append(np.mean(get_jmx(det, leads, experiment)))
-        s.append(np.std(get_jmx(det, leads, experiment)))
+        print(det,experiment,get_ja(det, leads, experiment))
+        m.append(np.mean(get_ja(det, leads, experiment)))
+        s.append(np.std(get_ja(det, leads, experiment)))
 
     return np.array(m),np.array(s)
 
@@ -60,8 +60,8 @@ def calc_stats(leads, experiment):
         print(det1," & ",end='')
     print("\\\\")
     for det1 in det_names:
-        r1 = get_jmx(det1, leads, experiment)
-        t,p = stats.ttest_1samp(r1,minjmx,alternative='greater')
+        r1 = get_ja(det1, leads, experiment)
+        t,p = stats.ttest_1samp(r1,minja,alternative='greater')
         print_stat(p)
     print()
 
@@ -90,7 +90,7 @@ def double_plot(data1, std1, data2, std2, y_label, legend1, legend2, title=None)
 
 
 def print_result(title,data,std,legend):
-    print("JMX Score:",title)
+    print("JA Score:",title)
     for i in zip(legend,data,std):
         print("{}: {:1.1f}+/-{:1.1f}".format(i[0],i[1],i[2]))
     print()
@@ -113,12 +113,12 @@ print_result('jogging chest strap',cs_jogging_avg,cs_jogging_std,det_names)
 
 double_plot(einthoven_sitting_avg, einthoven_sitting_std,
             einthoven_jogging_avg,einthoven_jogging_std,
-            'JMX (%)', 'Sitting', 'Jogging', 'Einthoven')
+            'JA (%)', 'Sitting', 'Jogging', 'Einthoven')
 
 
 double_plot(cs_sitting_avg, cs_sitting_std,
             cs_jogging_avg, cs_jogging_std,
-            'JMX (%)', 'Sitting', 'Jogging', 'Chest strap')
+            'JA (%)', 'Sitting', 'Jogging', 'Chest strap')
 
 
 

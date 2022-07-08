@@ -4,16 +4,16 @@ import matplotlib.pyplot as plt
 
 # Plots the map which maps jitter in seconds to %
 
-import jmx_analysis
+import ja_analysis
 
 jitter = np.linspace(0,100E-3,100)
 
-jmx = []
+ja = []
 
 for j in jitter:
-    jmx.append(jmx_analysis.mapping_jitter(j / jmx_analysis.norm_jitter))
+    ja.append(ja_analysis.mapping_jitter(j / ja_analysis.norm_jitter))
 
-plt.plot(jitter,jmx)
+plt.plot(jitter,ja)
 plt.xlabel("jitter / s")
 plt.ylabel("score")
 plt.show()

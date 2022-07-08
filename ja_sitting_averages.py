@@ -1,11 +1,11 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 """
-Calculates the individual jitters, accuracy and JMX values.
+Calculates the individual jitters, accuracy and JA values.
 Outputs the averages and stores the individual ones in a file.
 plot with gnuplot with:
 gnuplot> plot "norm_calc.tsv" using 1 with lines, "norm_calc.tsv" using 3 with lines 
-to plot the momentary jmx values and the current average at that point.
+to plot the momentary ja values and the current average at that point.
 gnuplot> plot "norm_calc.tsv" using 2 with lines, "norm_calc.tsv" using 4 with lines 
 To plot the accuracy and the average.
 """
@@ -16,11 +16,12 @@ import numpy as np
 import json
 from ecg_gudb_database import GUDb
 from ecgdetectors import Detectors
+from hrv import HRV
 import pathlib # For local file use
 from multiprocessing import Process
 
-# The JMX analysis for a detector
-import jmx_analysis
+# The JA analysis for a detector
+import ja_analysis
 
 # directory where the results are stored
 resultsdir = "results"
@@ -30,16 +31,18 @@ try:
 except OSError as error:
     pass
 
-fs = 250 #sampling rate
+# Get the sampling rate
+fs = GUDb.fs
 
-detectors = Detectors(fs) # Initialise detectors for 250Hz sample rate (GUDB)
+detectors = Detectors(fs) # Initialise detectors
+hrvcalc = HRV(fs)
 
 current_dir = pathlib.Path(__file__).resolve()
 
 recording_leads = "einthoven_ii"
 experiment = "sitting"
 
-jmx_results = np.empty((0,2))
+ja_results = np.empty((0,2))
 
 f = open("norm_calc.tsv","w")
 
@@ -48,6 +51,8 @@ for detector in detectors.detector_list:
     detectorname = detector[1].__name__
     detectorfunc = detector[1]
     
+    rmssd_results = np.array([])
+
     print("Processing:",detector[0])
 
     for subject_number in range(0, 25): # loop for all subjects
@@ -88,16 +93,20 @@ for detector in detectors.detector_list:
 
         if exist==True: # only proceed if an annotation exists
             detected_peaks = detectorfunc(data) # call detector class for current detector
-            interval_results = jmx_analysis.evaluate(detected_peaks, data_anno, fs, len(data)) # perform interval based analysis
-            jmx = np.array([interval_results[jmx_analysis.key_jitter],
-                            interval_results[jmx_analysis.key_accuracy],
+            interval_results = ja_analysis.evaluate(detected_peaks, data_anno, fs, len(data)) # perform interval based analysis
+            ja = np.array([interval_results[ja_analysis.key_jitter],
+                            interval_results[ja_analysis.key_accuracy],
                             
             ])
-            jmx_results = np.vstack( (jmx_results,jmx) )
-            jmx_avg = np.average(jmx_results,axis=0)
-            s = jmx_analysis.score(jmx_avg[0],jmx_avg[1])
-            print("Current avg: J = {:1.6f} sec, A = {:1.6f}, JMX = {:1.4f}".format(jmx_avg[0],jmx_avg[1],s))
-            f.write("{}\t{}\t{}\t{}\n".format(jmx[0],jmx[1],jmx_avg[0],jmx_avg[1]))
+            ja_results = np.vstack( (ja_results,ja) )
+            ja_avg = np.average(ja_results,axis=0)
+            s = ja_analysis.score(ja_avg[0],ja_avg[1])
+            rmssd = hrvcalc.RMSSD(data_anno)
+            rmssd_results = np.append( rmssd_results, rmssd )
+            rmssd_avg = np.average(rmssd_results)
+            rmssd_std = np.std(rmssd_results)
+            print("Current avg: J = {:1.6f} sec, A = {:1.6f}, JA = {:1.4f}, RMSSD = {:1.4f}+/-{:1.4f}".format(ja_avg[0],ja_avg[1],s,rmssd_avg,rmssd_std))
+            f.write("{}\t{}\t{}\t{}\t{}\t{}\n".format(ja[0],ja[1],rmssd,ja_avg[0],ja_avg[1],rmssd_avg))
             f.flush()
-print("FINAL Avg: J = {:1.6f} sec, A = {:1.6f}".format(jmx_avg[0],jmx_avg[1]))
+print("FINAL Avg: J = {:1.6f} sec, A = {:1.6f}".format(ja_avg[0],ja_avg[1]))
 f.close()
