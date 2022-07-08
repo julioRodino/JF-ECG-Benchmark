@@ -46,7 +46,7 @@ pip3 install ecg_gudb_database
 
 ### ja_analysis.py
 
-JA analysis of interval variation, missed beat and extra detection positions:
+JA analysis of interval variation and accuracy (FP, FN, TP & TN):
 
 ```
 evaluate(det_posn, anno_R, fs, nSamples, trim=True)
