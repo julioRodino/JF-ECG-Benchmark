@@ -123,7 +123,7 @@ def evaluate(det_posn, anno_R, fs, nSamples, trim=True):
 
     ja = {}
 
-    ja[key_jitter] = stats.median_absolute_deviation(differences_for_jitter)
+    ja[key_jitter] = stats.median_abs_deviation(differences_for_jitter)
     fp = len_det_posn - len(differences_for_jitter) # all detections - true positive = false positive
     fn = len_anno_R - len(differences_for_jitter) # all detections
     tp = len(differences_for_jitter)
