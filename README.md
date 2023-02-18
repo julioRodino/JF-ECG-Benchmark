@@ -27,16 +27,15 @@ pip install py-ecg-detectors [--user]
 
 From source:
 ```
-python3 setup.py install [--user]
+python setup.py install [--user]
 ```
 *Use the option --user if you don't have system-wise write permission.*
 
 ---
-Install ecg_gudb_database ([Howell and Porr, 2018](https://pypi.org/project/ecg-gudb-database/)) via the package manager [pip](https://pip.pypa.io/en/stable/) or pip3 which is a version of the pip installer for Python3.
+Install ecg_gudb_database ([Howell and Porr, 2018](https://pypi.org/project/ecg-gudb-database/)) via the package manager [pip](https://pip.pypa.io/en/stable/).
 
 ```bash
 pip install ecg_gudb_database
-pip3 install ecg_gudb_database
 ```
 
 ## Usage
