@@ -20,14 +20,11 @@ and an accuracy of 100%.
 
 Install `py-ecg-detectors` ([Howell and Porr, 2019](https://doi.org/10.5281/zenodo.3353396)).
 
-Linux / Mac:
-```
-pip3 install py-ecg-detectors [--user]
-```
-Windows:
+via PIP:
 ```
 pip install py-ecg-detectors [--user]
 ```
+
 From source:
 ```
 python3 setup.py install [--user]
@@ -102,5 +99,5 @@ yields mostly 99-100% sensitivity.
 
 # Credit
 
- - Eleanor Forsyth
  - Bernd Porr <bernd.porr@glasgow.ac.uk>
+ - Eleanor Forsyth
