@@ -65,48 +65,54 @@ def calc_stats(det,leads):
     print()
 
 
-def triple_plot(data1, std1, data2, std2, data3, std3, y_label, legend1, legend2, legend3, title=None):
+def multi_plot(data, std, y_label, legend, title=None):
     fig, ax = plt.subplots()
     x_pos = np.arange(len(experiment_names))
 
     fig.set_size_inches(10, 7)
-    width = 0.25
-    rects1 = ax.bar(x_pos, data1, width, yerr=std1, alpha=0.5, ecolor='black', capsize=10)
-    rects2 = ax.bar(x_pos+width, data2, width, yerr=std2, alpha=0.5, ecolor='black', capsize=10)
-    rects3 = ax.bar(x_pos+width*2, data3, width, yerr=std3, alpha=0.5, ecolor='black', capsize=10)
+    width = 1.0 / (len(data)+1)
+    rects = []
+    for i in range(len(data)):
+        rects.append(ax.bar(x_pos+width*i, data[i], width, yerr=std[i], alpha=0.5, ecolor='black', capsize=10))
     ax.set_ylim([0,150])
     ax.set_ylabel(y_label)
     ax.set_xlabel('Detector')
     ax.set_xticks(x_pos + width / 2)
     ax.set_xticklabels(experiment_names)
-    ax.legend((rects1[0], rects2[0], rects3[0]), (legend1, legend2, legend3))
+    ax.legend(rects, legend)
 
     if title!=None:
         ax.set_title(title)
 
     plt.tight_layout()
 
-    return rects1, rects2
+dets = []
+dets.append(det_names[3])
+dets.append(det_names[0])
+dets.append(det_names[7])
+dets.append(det_names[6])
+
+print("Dets:",dets)
+
+leads = einth
+if len(sys.argv) > 1:
+    leads = cs
+
+print("Leads:",leads)
+
+avg = []
+std = []
+for d in dets:
+    a,s = get_result(d, leads)
+    avg.append(a)
+    std.append(s)
+
+multi_plot(avg,std,
+        'JA (%)', dets, leads)
 
 
-det1 = det_names[0]
-det2 = det_names[3]
-det3 = det_names[7]
-
-print("Det:",det1,det2,det3)
-
-det1_avg,det1_std = get_result(det1, einth)
-det2_avg,det2_std = get_result(det2, einth)
-det3_avg,det3_std = get_result(det3, einth)
-
-triple_plot(det1_avg,det1_std,
-            det2_avg,det2_std,
-            det3_avg,det3_std,
-            'JA (%)', det1, det2, det3, "Einthoven")
-
-
-calc_stats(det1, einth)
-calc_stats(det2, einth)
-calc_stats(det3, einth)
+calc_stats(dets[0], leads)
+calc_stats(dets[1], leads)
+calc_stats(dets[2], leads)
 
 plt.show()
