@@ -16,6 +16,8 @@ ideal detector. The ideal detector has
 a median absolute deviation (MAD) of zero for temporal jitter
 and an accuracy of 100%.
 
+[![DOI](https://www.zenodo.org/badge/362771491.svg)](https://www.zenodo.org/badge/latestdoi/362771491)
+
 ## Prerequisites
 
 Install `py-ecg-detectors` ([Howell and Porr, 2019](https://doi.org/10.5281/zenodo.3353396)).
