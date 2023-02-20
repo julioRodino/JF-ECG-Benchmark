@@ -76,7 +76,7 @@ def multi_plot(data, std, y_label, legend, title=None):
         rects.append(ax.bar(x_pos+width*i, data[i], width, yerr=std[i], alpha=0.5, ecolor='black', capsize=10))
     ax.set_ylim([0,150])
     ax.set_ylabel(y_label)
-    ax.set_xlabel('Detector')
+    ax.set_xlabel('Experiment')
     ax.set_xticks(x_pos + width / 2)
     ax.set_xticklabels(experiment_names)
     ax.legend(rects, legend)
