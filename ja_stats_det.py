@@ -97,6 +97,8 @@ print("Dets:",dets)
 leads = einth
 if len(sys.argv) > 1:
     leads = cs
+else:
+    print("You can switch to chest strap by adding anything as an argument for example: '{} cs'.".format(sys.argv[0]))
 
 print("Leads:",leads)
 
@@ -111,8 +113,7 @@ multi_plot(avg,std,
         'JA (%)', dets, leads)
 
 
-calc_stats(dets[0], leads)
-calc_stats(dets[1], leads)
-calc_stats(dets[2], leads)
+for d in dets:
+    calc_stats(d, leads)
 
 plt.show()
