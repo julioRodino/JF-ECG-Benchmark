@@ -82,7 +82,9 @@ The overall JA Benchmark values for Einthoven
 II and chest strap results are shown together on a bar graph for
 comparison for sitting and jogging.
 
-![alt tag](ja.png)
+![alt tag](ja_einth.png)
+![alt tag](ja_chest.png)
+![alt tag](ja_det.png)
 
 # Traditional sensitivity analysis
 
