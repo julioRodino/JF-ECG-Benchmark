@@ -15,7 +15,7 @@ import pathlib # For local file use
 from multiprocessing import Process
 
 # The JA analysis for a detector
-import ja_analysis
+import jf_analysis
 
 # directory where the results are stored
 resultsdir = "results"
@@ -46,15 +46,15 @@ def evaluate_detector(detector):
 
     analysed=0 # overall count of analysed subjects
 
-    ja_leads = {} # initialise for data to be saved by lead and detector
+    jf_leads = {} # initialise for data to be saved by lead and detector
 
     for record_lead in all_recording_leads: # loop for all chosen leads
         
-        ja_experiments = {}
+        jf_experiments = {}
         
         for experiment in all_experiments: # loop for all chosen experiments
             
-            ja_subjects=[]
+            jf_subjects=[]
             
             for subject_number in range(0, 25): # loop for all subjects
                 
@@ -112,22 +112,22 @@ def evaluate_detector(detector):
 
                 if exist==True: # only proceed if an annotation exists
                     detected_peaks = detectorfunc(data) # call detector class for current detector
-                    ja_result = ja_analysis.evaluate(detected_peaks, data_anno, fs, len(data)) # perform interval based analysis
-                    ja_subjects.append(ja_result)
+                    jf_result = jf_analysis.evaluate(detected_peaks, data_anno, fs, len(data)) # perform interval based analysis
+                    jf_subjects.append(jf_result)
                     
             # ^ LOOP AROUND FOR NEXT SUBJECT
 
-            ja_experiments[experiment] = ja_subjects
+            jf_experiments[experiment] = jf_subjects
                         
         # ^ LOOP AROUND FOR NEXT EXPERIMENT
         
         # Add data for analysis by lead to (full array) 'data_det_lead' dictionary
         
-        ja_leads[record_lead] = ja_experiments
+        jf_leads[record_lead] = jf_experiments
         
     # ^ LOOP AROUND FOR NEXT LEAD
-    serialized_data = json.dumps(ja_leads,indent="\t")
-    f = open(resultsdir+"/ja_"+detectorname+".json","w")
+    serialized_data = json.dumps(jf_leads,indent="\t")
+    f = open(resultsdir+"/jf_"+detectorname+".json","w")
     f.write(serialized_data)
     f.close
 

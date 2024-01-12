@@ -1,13 +1,13 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 """
-Calculates the individual jitters, accuracy and JA values.
+Calculates the individual jitters, F1 and JA values.
 Outputs the averages and stores the individual ones in a file.
 plot with gnuplot with:
 gnuplot> plot "norm_calc.tsv" using 1 with lines, "norm_calc.tsv" using 3 with lines 
 to plot the momentary ja values and the current average at that point.
 gnuplot> plot "norm_calc.tsv" using 2 with lines, "norm_calc.tsv" using 4 with lines 
-To plot the accuracy and the average.
+To plot the F1 and the average.
 """
 
 import sys
@@ -95,7 +95,7 @@ for detector in detectors.detector_list:
             detected_peaks = detectorfunc(data) # call detector class for current detector
             interval_results = ja_analysis.evaluate(detected_peaks, data_anno, fs, len(data)) # perform interval based analysis
             ja = np.array([interval_results[ja_analysis.key_jitter],
-                            interval_results[ja_analysis.key_accuracy],
+                            interval_results[ja_analysis.key_f1],
                             
             ])
             ja_results = np.vstack( (ja_results,ja) )

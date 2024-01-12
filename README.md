@@ -1,8 +1,8 @@
-# JA Benchmark Analysis for heartbeat detectors
+# JF Benchmark Analysis for heartbeat detectors
 
 A benchmarking analysis method that generates an overall benchmark for
 ECG detector algorithms, based on measurements of temporal jitter (J)
-and (A) accuracy
+and (F) score
 
 The Glasgow University GUDB ECG recordings database ([Howell and Porr,
 2018](http://dx.doi.org/10.5525/gla.researchdata.716)) is used for
@@ -14,7 +14,7 @@ Einthoven III can additionally be used if desired).
 The benchmark gives a score between 0-100 where 100 is defined as the
 ideal detector. The ideal detector has
 a median absolute deviation (MAD) of zero for temporal jitter
-and an accuracy of 100%.
+and an F-score of 100%.
 
 [![DOI](https://www.zenodo.org/badge/362771491.svg)](https://www.zenodo.org/badge/latestdoi/362771491)
 
@@ -44,7 +44,7 @@ pip install ecg_gudb_database
 
 ### ja_analysis.py
 
-JA analysis of interval variation and accuracy (FP, FN, TP & TN):
+JA analysis of interval variation and F1 (FP, FN, TP):
 
 ```
 evaluate(det_posn, anno_R, fs, nSamples, trim=True)
@@ -66,8 +66,8 @@ Returns:
     - ja[key_tn]       : true negative beats
     - ja[key_fp]       : false positive beats
     - ja[key_fn]       : false negative beats
-    - ja[key_accuracy] : accuracy
-    - ja[key_ja]      : JA Score
+    - ja[key_f1]       : F1 score
+    - ja[key_ja]       : JF Score
 
 
 ### ja_evaluate_all_detectors.py

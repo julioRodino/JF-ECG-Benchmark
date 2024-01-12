@@ -1,21 +1,17 @@
 """
 JA analysis
 ============
-Analyses a detector for Jitter and Accuracy.
+Analyses a detector for Jitter and F1 score.
 At the heart is the jitter detection algorithm on annotation/detection
 pairs. A Jitter of 0ms gives a 100% score and then drops to
 zero with increased jitter.
-Missed beats and extra/spurios detections are then used to calculate Accuracy
+Missed beats and extra/spurios detections are then used to calculate F1
 as a normalised measure independent on the number of beats.
-The overall score is then: JA = Jitter/% * Accuracy/%.
+The overall score is then: JA = Jitter/% * F1/%.
 """
 import numpy as np
 import util
 from scipy import stats
-
-# Used to determine how many beats could have been at max heartrate.
-# This is needed to calculate the true negatives (TN).
-maxHR = 220
 
 # The jitter which gives a 50% performance. That's a 1/4 of the average
 # RMSSD which is 40ms.
@@ -26,10 +22,9 @@ b = -5 # number of annotated beats to trim from end
 
 # keys for the ja dict:
 key_jitter = "jitter" # temproal jitter in s
-key_accuracy = "accuracy" # statistical accuracy
+key_f1 = "f1" # F1 score
 key_ja = "ja" # ja score
 key_tp = "TP" # True positives
-key_tn = "TN" # True negatives
 key_fp = "FP" # False positives
 key_fn = "FN" # False negatives
 
@@ -64,13 +59,13 @@ def nearest_diff(annotation, nearest_match):
     return unique_diffs
 
 
-def score(jitter,accuracy):
+def score(jitter,f1):
     """
     Calculates the JA score by multiplying the normalised jitter
-    with the accuracy which in turn is based on missing and extra beats.
+    with f1 which in turn is based on missing and extra beats.
     """
     jitter_score = 1 / ( 1 + (jitter / norm_jitter) ) # normalised jitter 0..1
-    return accuracy * jitter_score
+    return f1 * jitter_score
 
 
 def evaluate(det_posn, anno_R, fs, nSamples, trim=True):
@@ -83,11 +78,10 @@ def evaluate(det_posn, anno_R, fs, nSamples, trim=True):
     returns:
     ja[key_jitter]   : jitter in s
     ja[key_tp]       : true positive beats
-    ja[key_tn]       : true negative beats
     ja[key_fp]       : false positive beats
     ja[key_fn]       : false negative beats
-    ja[key_accuracy] : accuracy
-    ja[key_ja]      : JA Score
+    ja[key_f1]       : f1
+    ja[key_ja]       : JA Score
     """
 
     # Median delay of the detection against the annotations
@@ -127,18 +121,15 @@ def evaluate(det_posn, anno_R, fs, nSamples, trim=True):
     fp = len_det_posn - len(differences_for_jitter) # all detections - true positive = false positive
     fn = len_anno_R - len(differences_for_jitter) # all detections
     tp = len(differences_for_jitter)
-    maxBeats = nSamples / fs * maxHR / 60
-    tn = maxBeats - (tp + fn + fp) # remaining samples
     ja[key_tp] = tp
-    ja[key_tn] = tn
     ja[key_fp] = fp
     ja[key_fn] = fn
-    if (tp + tn + fp + fn) > 0:
-        accuracy = (tp + tn)/(tp + tn + fp + fn)
-        ja[key_accuracy] = accuracy
-        ja[key_ja] = score(ja[key_jitter],accuracy)
+    if (tp + fp + fn) > 0:
+        f1 = (2*tp)/(2*tp + fp + fn)
+        ja[key_f1] = f1
+        ja[key_ja] = score(ja[key_jitter],f1)
     else:
-        ja[key_accuracy] = False
+        ja[key_f1] = False
         ja[key_ja] = False
     print(ja)
     return ja
