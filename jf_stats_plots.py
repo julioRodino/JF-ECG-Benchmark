@@ -21,7 +21,7 @@ alpha = 0.05
 minja = 90 # %
 
 def get_ja(detector_name, leads, experiment):
-    f = open(resultsdir+"/ja_"+detector_name+".json","r")
+    f = open(resultsdir+"/jf_"+detector_name+".json","r")
     js = f.read()
     data = json.loads(js)
     s = []
@@ -90,7 +90,7 @@ def double_plot(data1, std1, data2, std2, y_label, legend1, legend2, title=None)
 
 
 def print_result(title,data,std,legend):
-    print("JA Score:",title)
+    print("JF Score:",title)
     for i in zip(legend,data,std):
         print("{}: {:1.1f}+/-{:1.1f}".format(i[0],i[1],i[2]))
     print()
@@ -113,12 +113,12 @@ print_result('jogging chest strap',cs_jogging_avg,cs_jogging_std,det_names)
 
 double_plot(einthoven_sitting_avg, einthoven_sitting_std,
             einthoven_jogging_avg,einthoven_jogging_std,
-            'JA (%)', 'Sitting', 'Jogging', 'Einthoven')
+            'JF (%)', 'Sitting', 'Jogging', 'Einthoven')
 
 
 double_plot(cs_sitting_avg, cs_sitting_std,
             cs_jogging_avg, cs_jogging_std,
-            'JA (%)', 'Sitting', 'Jogging', 'Chest strap')
+            'JF (%)', 'Sitting', 'Jogging', 'Chest strap')
 
 
 

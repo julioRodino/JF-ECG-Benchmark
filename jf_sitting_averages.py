@@ -1,11 +1,11 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 """
-Calculates the individual jitters, F1 and JA values.
+Calculates the individual jitters and F1 values.
 Outputs the averages and stores the individual ones in a file.
 plot with gnuplot with:
 gnuplot> plot "norm_calc.tsv" using 1 with lines, "norm_calc.tsv" using 3 with lines 
-to plot the momentary ja values and the current average at that point.
+to plot the momentary jf values and the current average at that point.
 gnuplot> plot "norm_calc.tsv" using 2 with lines, "norm_calc.tsv" using 4 with lines 
 To plot the F1 and the average.
 """
@@ -20,8 +20,8 @@ from hrv import HRV
 import pathlib # For local file use
 from multiprocessing import Process
 
-# The JA analysis for a detector
-import ja_analysis
+# The JF analysis for a detector
+import jf_analysis
 
 # directory where the results are stored
 resultsdir = "results"
@@ -42,7 +42,7 @@ current_dir = pathlib.Path(__file__).resolve()
 recording_leads = "einthoven_ii"
 experiment = "sitting"
 
-ja_results = np.empty((0,2))
+jf_results = np.empty((0,2))
 
 f = open("norm_calc.tsv","w")
 
@@ -93,20 +93,20 @@ for detector in detectors.detector_list:
 
         if exist==True: # only proceed if an annotation exists
             detected_peaks = detectorfunc(data) # call detector class for current detector
-            interval_results = ja_analysis.evaluate(detected_peaks, data_anno, fs, len(data)) # perform interval based analysis
-            ja = np.array([interval_results[ja_analysis.key_jitter],
-                            interval_results[ja_analysis.key_f1],
+            interval_results = jf_analysis.evaluate(detected_peaks, data_anno, fs, len(data)) # perform interval based analysis
+            ja = np.array([interval_results[jf_analysis.key_jitter],
+                            interval_results[jf_analysis.key_f1],
                             
             ])
-            ja_results = np.vstack( (ja_results,ja) )
-            ja_avg = np.average(ja_results,axis=0)
-            s = ja_analysis.score(ja_avg[0],ja_avg[1])
+            jf_results = np.vstack( (jf_results,ja) )
+            jf_avg = np.average(jf_results,axis=0)
+            s = jf_analysis.score(jf_avg[0],jf_avg[1])
             rmssd = hrvcalc.RMSSD(data_anno)
             rmssd_results = np.append( rmssd_results, rmssd )
             rmssd_avg = np.average(rmssd_results)
             rmssd_std = np.std(rmssd_results)
-            print("Current avg: J = {:1.6f} sec, A = {:1.6f}, JA = {:1.4f}, RMSSD = {:1.4f}+/-{:1.4f}".format(ja_avg[0],ja_avg[1],s,rmssd_avg,rmssd_std))
-            f.write("{}\t{}\t{}\t{}\t{}\t{}\n".format(ja[0],ja[1],rmssd,ja_avg[0],ja_avg[1],rmssd_avg))
+            print("Current avg: J = {:1.6f} sec, A = {:1.6f}, JF = {:1.4f}, RMSSD = {:1.4f}+/-{:1.4f}".format(jf_avg[0],jf_avg[1],s,rmssd_avg,rmssd_std))
+            f.write("{}\t{}\t{}\t{}\t{}\t{}\n".format(ja[0],ja[1],rmssd,jf_avg[0],jf_avg[1],rmssd_avg))
             f.flush()
-print("FINAL Avg: J = {:1.6f} sec, A = {:1.6f}".format(ja_avg[0],ja_avg[1]))
+print("FINAL Avg: J = {:1.6f} sec, A = {:1.6f}".format(jf_avg[0],jf_avg[1]))
 f.close()

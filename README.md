@@ -42,9 +42,9 @@ pip install ecg_gudb_database
 
 ## Usage
 
-### ja_analysis.py
+### jf_analysis.py
 
-JA analysis of interval variation and F1 (FP, FN, TP):
+JF analysis of interval variation and F1 (FP, FN, TP):
 
 ```
 evaluate(det_posn, anno_R, fs, nSamples, trim=True)
@@ -61,22 +61,21 @@ Arguments:
 
 Returns:
 
-    - ja[key_jitter]   : jitter in s
-    - ja[key_tp]       : true positive beats
-    - ja[key_tn]       : true negative beats
-    - ja[key_fp]       : false positive beats
-    - ja[key_fn]       : false negative beats
-    - ja[key_f1]       : F1 score
-    - ja[key_ja]       : JF Score
+    - jf[key_jitter]   : jitter in s
+    - jf[key_tp]       : true positive beats
+    - jf[key_fp]       : false positive beats
+    - jf[key_fn]       : false negative beats
+    - jf[key_f1]       : F1 score
+    - jf[key_jf]       : JF Score
 
 
-### ja_evaluate_all_detectors.py
+### jf_evaluate_all_detectors.py
 
 The code evaluates all ECG detectors with all subjects, all leads, and all
 experiments. It outputs separate json files for every detector and stores
 them in the `results` directory.
 
-### ja_stats_plots.py
+### jf_stats_plots.py
 
 The overall JA Benchmark values for Einthoven
 II and chest strap results are shown together on a bar graph for

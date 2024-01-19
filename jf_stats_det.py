@@ -21,7 +21,7 @@ alpha = 0.05
 minja = 90 # %
 
 def get_ja(detector_name, leads, experiment):
-    f = open(resultsdir+"/ja_"+detector_name+".json","r")
+    f = open(resultsdir+"/jf_"+detector_name+".json","r")
     js = f.read()
     data = json.loads(js)
     s = []
