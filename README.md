@@ -44,6 +44,8 @@ pip install ecg_gudb_database
 
 ### jf_analysis.py
 
+Module which performs the JF analysis. It has no main program.
+
 JF analysis of interval variation and F1 (FP, FN, TP):
 
 ```
@@ -75,15 +77,23 @@ The code evaluates all ECG detectors with all subjects, all leads, and all
 experiments. It outputs separate json files for every detector and stores
 them in the `results` directory.
 
+Only needs to be run once and then can be analysed by the script below.
+
 ### jf_stats_plots.py
 
-The overall JA Benchmark values for Einthoven
+The overall JF Benchmark values for Einthoven
 II and chest strap results are shown together on a bar graph for
 comparison for sitting and jogging.
 
-![alt tag](ja_einth.png)
-![alt tag](ja_chest.png)
-![alt tag](ja_det.png)
+![alt tag](jf_einth.png)
+![alt tag](jf_chest.png)
+
+### jf_stats_activities.py
+
+This analysis focusses how different noise levels affect performance from
+sitting to jogging.
+
+![alt tag](jf_activities.png)
 
 # Traditional sensitivity analysis
 

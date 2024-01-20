@@ -18,7 +18,7 @@ resultsdir = "results"
 
 alpha = 0.05
 
-minja = 90 # %
+minjf = 90 # %
 
 def get_ja(detector_name, leads, experiment):
     f = open(resultsdir+"/jf_"+detector_name+".json","r")
@@ -60,7 +60,7 @@ def calc_stats(det,leads):
     print("\\\\")
     for e in experiment_names:
         r1 = get_ja(det, leads, e)
-        t,p = stats.ttest_1samp(r1,minja,alternative='greater')
+        t,p = stats.ttest_1samp(r1,minjf,alternative='greater')
         print_stat(p)
     print()
 
@@ -92,15 +92,23 @@ dets.append(det_names[0])
 dets.append(det_names[7])
 dets.append(det_names[6])
 
-print("Dets:",dets)
+helpstr = "Valid arguments are 'einth' for Einthoven or 'cs' for Chest Strap."
 
 leads = einth
 if len(sys.argv) > 1:
-    leads = cs
+    if ('einth' in sys.argv[1]):
+        leads = einth
+    elif ('cs' in sys.argv[1]):
+        leads = cs
+    else:
+        print(helpstr)
+        print("Exiting...")
+        quit()
 else:
-    print("You can switch to chest strap by adding anything as an argument for example: '{} cs'.".format(sys.argv[0]))
+    print(helpstr)
 
 print("Leads:",leads)
+print("Dets:",dets)
 
 avg = []
 std = []
@@ -110,7 +118,7 @@ for d in dets:
     std.append(s)
 
 multi_plot(avg,std,
-        'JA (%)', dets, leads)
+        'JF (%)', dets, leads)
 
 
 for d in dets:
