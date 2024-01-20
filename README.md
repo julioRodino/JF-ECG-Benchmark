@@ -79,9 +79,9 @@ them in the `results` directory.
 
 Only needs to be run once and then can be analysed by the script below.
 
-### jf_stats_plots.py
+### jf_stats_detectors.py
 
-The overall JF Benchmark values for Einthoven
+The overall JF Benchmark values of all detectors for Einthoven
 II and chest strap results are shown together on a bar graph for
 comparison for sitting and jogging.
 
