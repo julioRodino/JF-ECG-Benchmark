@@ -95,6 +95,11 @@ sitting to jogging.
 
 ![alt tag](jf_activities.png)
 
+## jf_stats_detectors_sitting.py
+
+Prints out the stats for all detectors for Einthoven and sitting. It also
+counts the number of QRS complexes used.
+
 # Traditional sensitivity analysis
 
 For a sensitivity analysis on an `fs/10` samples temporal window run:
