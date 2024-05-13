@@ -20,14 +20,14 @@ alpha = 0.05
 
 minjf = 90 # %
 
-def get_ja(detector_name, leads, experiment):
+def get_jf(detector_name, leads, experiment):
     f = open(resultsdir+"/jf_"+detector_name+".json","r")
     js = f.read()
     data = json.loads(js)
     s = []
     for i in data[leads][experiment]:
-        if i["ja"]:
-            s.append(i["ja"]*100)
+        if i["jf"]:
+            s.append(i["jf"]*100)
     return np.array(s)
 
 
@@ -36,8 +36,8 @@ def get_result(det, leads):
     m = []
     s = []
     for e in experiment_names:
-        m.append(np.mean(get_ja(det, leads, e)))
-        s.append(np.std(get_ja(det, leads, e)))
+        m.append(np.mean(get_jf(det, leads, e)))
+        s.append(np.std(get_jf(det, leads, e)))
 
     return m,s
 
@@ -59,7 +59,7 @@ def calc_stats(det,leads):
         print(e," & ",end='')
     print("\\\\")
     for e in experiment_names:
-        r1 = get_ja(det, leads, e)
+        r1 = get_jf(det, leads, e)
         t,p = stats.ttest_1samp(r1,minjf,alternative='greater')
         print_stat(p)
     print()

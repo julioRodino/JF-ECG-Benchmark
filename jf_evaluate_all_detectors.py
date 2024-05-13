@@ -14,7 +14,7 @@ from ecgdetectors import Detectors
 import pathlib # For local file use
 from multiprocessing import Process
 
-# The JA analysis for a detector
+# The JF analysis for a detector
 import jf_analysis
 
 # directory where the results are stored

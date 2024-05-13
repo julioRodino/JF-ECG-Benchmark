@@ -19,14 +19,14 @@ alpha = 0.05
 
 minja = 90 # %
 
-def get_ja(detector_name):
+def get_jf(detector_name):
     f = open(resultsdir+"/jf_"+detector_name+".json","r")
     js = f.read()
     data = json.loads(js)
     s = []
     for i in data[leads][experiment]:
-        if i["ja"]:
-            s.append(i["ja"]*100)
+        if i["jf"]:
+            s.append(i["jf"]*100)
     return np.array(s)
 
 
@@ -41,8 +41,8 @@ def get_result(det):
             n = n + len(data_anno)
     for det in det_names:
         print(det,experiment)
-        m.append(np.mean(get_ja(det)))
-        s.append(np.std(get_ja(det)))
+        m.append(np.mean(get_jf(det)))
+        s.append(np.std(get_jf(det)))
 
     return n,np.array(m),np.array(s)
 
