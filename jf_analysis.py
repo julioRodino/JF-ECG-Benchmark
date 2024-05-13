@@ -1,5 +1,5 @@
 """
-JA analysis
+JF analysis
 ============
 Analyses a detector for Jitter and F1 score.
 At the heart is the jitter detection algorithm on annotation/detection
@@ -7,7 +7,7 @@ pairs. A Jitter of 0ms gives a 100% score and then drops to
 zero with increased jitter.
 Missed beats and extra/spurios detections are then used to calculate F1
 as a normalised measure independent on the number of beats.
-The overall score is then: JA = Jitter/% * F1/%.
+The overall score is then: jf = Jitter/% * F1/%.
 """
 import numpy as np
 import util
@@ -20,10 +20,10 @@ norm_jitter = 10E-3 # sec
 a = 10 # number of annotated beats to trim from start
 b = -5 # number of annotated beats to trim from end
 
-# keys for the ja dict:
+# keys for the jf dict:
 key_jitter = "jitter" # temproal jitter in s
 key_f1 = "f1" # F1 score
-key_ja = "ja" # ja score
+key_jf = "jf" # jf score
 key_tp = "TP" # True positives
 key_fp = "FP" # False positives
 key_fn = "FN" # False negatives
@@ -61,7 +61,7 @@ def nearest_diff(annotation, nearest_match):
 
 def score(jitter,f1):
     """
-    Calculates the JA score by multiplying the normalised jitter
+    Calculates the JF score by multiplying the normalised jitter
     with f1 which in turn is based on missing and extra beats.
     """
     jitter_score = 1 / ( 1 + (jitter / norm_jitter) ) # normalised jitter 0..1
@@ -70,18 +70,18 @@ def score(jitter,f1):
 
 def evaluate(det_posn, anno_R, fs, nSamples, trim=True):
     """
-    JA analysis of interval variation, missed beat and extra detection positions
+    JF analysis of interval variation, missed beat and extra detection positions
     det_posn: the timestamps of the detector in sample positions
     anno_R: the ground truth in samples
     fs: sampling rate of the ECG file
     nSamples: number of samples in the ECG file
     returns:
-    ja[key_jitter]   : jitter in s
-    ja[key_tp]       : true positive beats
-    ja[key_fp]       : false positive beats
-    ja[key_fn]       : false negative beats
-    ja[key_f1]       : f1
-    ja[key_ja]       : JA Score
+    jf[key_jitter]   : jitter in s
+    jf[key_tp]       : true positive beats
+    jf[key_fp]       : false positive beats
+    jf[key_fn]       : false negative beats
+    jf[key_f1]       : f1
+    jf[key_jf]       : JF Score
     """
 
     # Median delay of the detection against the annotations
@@ -115,21 +115,21 @@ def evaluate(det_posn, anno_R, fs, nSamples, trim=True):
         difference = np.abs(d / fs)
         differences_for_jitter.append(difference)
 
-    ja = {}
+    jf = {}
 
-    ja[key_jitter] = stats.median_abs_deviation(differences_for_jitter)
+    jf[key_jitter] = stats.median_abs_deviation(differences_for_jitter)
     fp = len_det_posn - len(differences_for_jitter) # all detections - true positive = false positive
     fn = len_anno_R - len(differences_for_jitter) # all detections
     tp = len(differences_for_jitter)
-    ja[key_tp] = tp
-    ja[key_fp] = fp
-    ja[key_fn] = fn
+    jf[key_tp] = tp
+    jf[key_fp] = fp
+    jf[key_fn] = fn
     if (tp + fp + fn) > 0:
         f1 = (2*tp)/(2*tp + fp + fn)
-        ja[key_f1] = f1
-        ja[key_ja] = score(ja[key_jitter],f1)
+        jf[key_f1] = f1
+        jf[key_jf] = score(jf[key_jitter],f1)
     else:
-        ja[key_f1] = False
-        ja[key_ja] = False
-    print(ja)
-    return ja
+        jf[key_f1] = False
+        jf[key_jf] = False
+    print(jf)
+    return jf
