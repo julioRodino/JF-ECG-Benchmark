@@ -10,8 +10,8 @@ as a normalised measure independent on the number of beats.
 The overall score is then: jf = Jitter/% * F1/%.
 """
 import numpy as np
-import util
 from scipy import stats
+from . import util
 
 # The jitter which gives a 50% performance. That's a 1/4 of the average
 # RMSSD which is 40ms.

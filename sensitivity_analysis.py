@@ -3,7 +3,7 @@
 Trad sensitivity analysis with true positives, false positives, and false negatives.
 """
 import numpy as np
-import util
+from . import util
 
 """
 The central function evaluating true positive, false positive and false negative.
